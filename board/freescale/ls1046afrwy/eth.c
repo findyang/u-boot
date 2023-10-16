@@ -15,6 +15,7 @@
 int board_eth_init(bd_t *bis)
 {
 #ifdef CONFIG_FMAN_ENET
+	int i;
 	struct memac_mdio_info dtsec_mdio_info;
 	struct mii_dev *dev;
 	u32 srds_s1;
@@ -32,14 +33,25 @@ int board_eth_init(bd_t *bis)
 	/* Register the 1G MDIO bus */
 	fm_memac_mdio_init(bis, &dtsec_mdio_info);
 
+	//gie unused QSGMII
 	/* QSGMII on lane B, MAC 6/5/10/1 */
-	fm_info_set_phy_address(FM1_DTSEC6, QSGMII_PORT1_PHY_ADDR);
-	fm_info_set_phy_address(FM1_DTSEC5, QSGMII_PORT2_PHY_ADDR);
-	fm_info_set_phy_address(FM1_DTSEC10, QSGMII_PORT3_PHY_ADDR);
-	fm_info_set_phy_address(FM1_DTSEC1, QSGMII_PORT4_PHY_ADDR);
+	// fm_info_set_phy_address(FM1_DTSEC6, QSGMII_PORT1_PHY_ADDR);
+	// fm_info_set_phy_address(FM1_DTSEC5, QSGMII_PORT2_PHY_ADDR);
+	// fm_info_set_phy_address(FM1_DTSEC10, QSGMII_PORT3_PHY_ADDR);
+	// fm_info_set_phy_address(FM1_DTSEC1, QSGMII_PORT4_PHY_ADDR);
+
+	// add gie RGMII
+	fm_info_set_phy_address(FM1_DTSEC1, RGMII_PHY1_ADDR);
+	fm_info_set_phy_address(FM1_DTSEC2, RGMII_PHY2_ADDR);
+
+	//add gie SGMII 
+	fm_info_set_phy_address(FM1_DTSEC3, SGMII_PHY1_ADDR);
+	fm_info_set_phy_address(FM1_DTSEC4, SGMII_PHY2_ADDR);
+	fm_info_set_phy_address(FM1_DTSEC5, SGMII_PHY3_ADDR);
 
 	switch (srds_s1) {
-	case 0x3040:
+	case 0x3333:
+		printf("****switch 0x3333");
 		break;
 	default:
 		printf("Invalid SerDes protocol 0x%x for LS1046AFRWY\n",
@@ -48,10 +60,8 @@ int board_eth_init(bd_t *bis)
 	}
 
 	dev = miiphy_get_dev_by_name(DEFAULT_FM_MDIO_NAME);
-	fm_info_set_mdio(FM1_DTSEC6, dev);
-	fm_info_set_mdio(FM1_DTSEC5, dev);
-	fm_info_set_mdio(FM1_DTSEC10, dev);
-	fm_info_set_mdio(FM1_DTSEC1, dev);
+	for (i = FM1_DTSEC1; i < FM1_DTSEC1 + CONFIG_SYS_NUM_FM1_DTSEC; i++)
+		fm_info_set_mdio(i, dev);
 
 	cpu_eth_init(bis);
 #endif
@@ -101,6 +111,8 @@ int fdt_update_ethernet_dt(void *blob)
 				fdt_status_disabled(blob, nodeoff);
 			if (!strcmp(name, "ethernet6"))
 				fdt_status_disabled(blob, nodeoff);
+		break;
+		case 0x3333:
 		break;
 		default:
 			printf("%s:Invalid SerDes prtcl 0x%x for LS1046AFRWY\n",

@@ -193,17 +193,29 @@
 /* FMan */
 #ifndef SPL_NO_FMAN
 
+#ifdef CONFIG_NET
+#define CONFIG_PHY_REALTEK
+#endif
+
 #ifdef CONFIG_SYS_DPAA_FMAN
 #define CONFIG_FMAN_ENET
+//gie ls1046a unused
+// #define QSGMII_PORT1_PHY_ADDR		0x1c
+// #define QSGMII_PORT2_PHY_ADDR		0x1d
+// #define QSGMII_PORT3_PHY_ADDR		0x1e
+// #define QSGMII_PORT4_PHY_ADDR		0x1f
 
-#define QSGMII_PORT1_PHY_ADDR		0x1c
-#define QSGMII_PORT2_PHY_ADDR		0x1d
-#define QSGMII_PORT3_PHY_ADDR		0x1e
-#define QSGMII_PORT4_PHY_ADDR		0x1f
+//add gie ls1046a 地址根据硬件原理图确认
+#define RGMII_PHY1_ADDR                        0x1
+#define RGMII_PHY2_ADDR                        0x2
+#define SGMII_PHY1_ADDR                        0x3
+#define SGMII_PHY2_ADDR                        0x4
+#define SGMII_PHY3_ADDR                        0x5
 
 #define FDT_SEQ_MACADDR_FROM_ENV
 
-#define CONFIG_ETHPRIME			"FM1@DTSEC3"
+#define CONFIG_ETHPRIME			"FM1@DTSEC5"
+
 #endif
 
 #endif
