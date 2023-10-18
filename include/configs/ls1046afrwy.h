@@ -193,10 +193,6 @@
 /* FMan */
 #ifndef SPL_NO_FMAN
 
-#ifdef CONFIG_NET
-#define CONFIG_PHY_REALTEK
-#endif
-
 #ifdef CONFIG_SYS_DPAA_FMAN
 #define CONFIG_FMAN_ENET
 //gie ls1046a unused
