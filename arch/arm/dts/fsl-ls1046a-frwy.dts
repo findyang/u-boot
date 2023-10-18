@@ -10,7 +10,7 @@
 /include/ "fsl-ls1046a.dtsi"
 
 / {
-	model = "LS1046A FRWY Board";
+	model = "GIE LS1046A FRWY Board";
 
 	aliases {
 		spi0 = &qspi;
@@ -22,7 +22,7 @@
 	bus-num = <0>;
 	status = "okay";
 
-	qflash0: mt25qu512abb8esf@0 {
+	qflash0: mt25ql256aba8esf@0 {
 		#address-cells = <1>;
 		#size-cells = <1>;
 		compatible = "spi-flash";
