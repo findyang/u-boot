@@ -517,6 +517,16 @@ static int eth_post_probe(struct udevice *dev)
 		net_random_ethaddr(pdata->enetaddr);
 		printf("\nWarning: %s (eth%d) using random MAC address - %pM\n",
 		       dev->name, dev->seq, pdata->enetaddr);
+		
+		char tmp[50] = {'\n'};
+		if (dev->seq == 0){
+			sprintf(tmp, "setenv ethaddr %pM\n", pdata->enetaddr);
+		}
+		else{
+			sprintf(tmp, "setenv eth%daddr %pM\n", dev->seq, pdata->enetaddr);
+		}
+		run_command(tmp, 0);
+		run_command("saveenv", 0);
 #else
 		printf("\nError: %s address not set.\n",
 		       dev->name);
