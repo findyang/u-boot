@@ -195,11 +195,6 @@
 
 #ifdef CONFIG_SYS_DPAA_FMAN
 #define CONFIG_FMAN_ENET
-//gie ls1046a unused
-// #define QSGMII_PORT1_PHY_ADDR		0x1c
-// #define QSGMII_PORT2_PHY_ADDR		0x1d
-// #define QSGMII_PORT3_PHY_ADDR		0x1e
-// #define QSGMII_PORT4_PHY_ADDR		0x1f
 
 //add gie ls1046a 地址根据硬件原理图确认
 #define RGMII_PHY1_ADDR                        0x1
@@ -220,7 +215,7 @@
 #ifndef SPL_NO_QSPI
 #ifdef CONFIG_FSL_QSPI
 #define CONFIG_SPI_FLASH_SPANSION
-#define FSL_QSPI_FLASH_SIZE		SZ_64M
+#define FSL_QSPI_FLASH_SIZE		SZ_32M
 #define FSL_QSPI_FLASH_NUM		2
 #endif
 #endif
