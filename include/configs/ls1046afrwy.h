@@ -205,7 +205,7 @@
 
 #define FDT_SEQ_MACADDR_FROM_ENV
 
-#define CONFIG_ETHPRIME			"FM1@DTSEC5"
+#define CONFIG_ETHPRIME			"FM1@DTSEC3"
 
 #endif
 
