@@ -177,6 +177,9 @@ int genphy_config_aneg(struct phy_device *phydev)
 {
 	int result;
 
+	/* Gie SOFT RESET */
+    phy_reset(phydev);
+
 	if (phydev->autoneg != AUTONEG_ENABLE)
 		return genphy_setup_forced(phydev);
 
@@ -220,6 +223,19 @@ int genphy_config_aneg(struct phy_device *phydev)
 int genphy_update_link(struct phy_device *phydev)
 {
 	unsigned int mii_reg;
+
+	static int rtl8211_flag = 0;
+	int bmcr_reg = 0;
+	if (rtl8211_flag == 0) {
+		bmcr_reg = phy_read(phydev, MDIO_DEVAD_NONE, MII_BMCR); 
+		phy_write(phydev, MDIO_DEVAD_NONE, MII_BMCR, BMCR_RESET); 
+		while(phy_read(phydev, MDIO_DEVAD_NONE, MII_BMCR) & 0X8000) {
+			udelay(100); 
+		}
+		phy_write(phydev, MDIO_DEVAD_NONE, MII_BMCR, bmcr_reg); 
+		rtl8211_flag = 1;
+	}
+
 
 	/*
 	 * Wait if the link is up, and autonegotiation is in progress
@@ -508,6 +524,7 @@ int phy_init(void)
 	phy_natsemi_init();
 #endif
 #ifdef CONFIG_PHY_REALTEK
+	printf("phy_realtek_init\n");
 	phy_realtek_init();
 #endif
 #ifdef CONFIG_PHY_SMSC
@@ -799,7 +816,7 @@ static struct phy_device *get_phy_device(struct mii_dev *bus, int addr,
 int phy_reset(struct phy_device *phydev)
 {
 	int reg;
-	int timeout = 500;
+	int timeout = 1000;
 	int devad = MDIO_DEVAD_NONE;
 
 	if (phydev->flags & PHY_FLAG_BROKEN_RESET)
@@ -816,7 +833,7 @@ int phy_reset(struct phy_device *phydev)
 #endif
 
 	if (phy_write(phydev, devad, MII_BMCR, BMCR_RESET) < 0) {
-		debug("PHY reset failed\n");
+		printf("PHY reset failed\n");
 		return -1;
 	}
 
@@ -829,11 +846,12 @@ int phy_reset(struct phy_device *phydev)
 	 * IEEE spec.
 	 */
 	reg = phy_read(phydev, devad, MII_BMCR);
+	printf("phy_read reg:%d\n", reg);
 	while ((reg & BMCR_RESET) && timeout--) {
 		reg = phy_read(phydev, devad, MII_BMCR);
 
 		if (reg < 0) {
-			debug("PHY status read failed\n");
+			printf("PHY status read failed\n");
 			return -1;
 		}
 		udelay(1000);
@@ -841,6 +859,7 @@ int phy_reset(struct phy_device *phydev)
 
 	if (reg & BMCR_RESET) {
 		puts("PHY reset timed out\n");
+		printf("reg:%d\n", reg);
 		return -1;
 	}
 
