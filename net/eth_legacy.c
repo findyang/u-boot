@@ -244,6 +244,18 @@ int eth_unregister(struct eth_device *dev)
 	return 0;
 }
 
+void print_eth_state(enum eth_state_t state) {
+    if (state == ETH_STATE_INIT) {
+        printf("ETH_STATE_INIT\n");
+    } else if (state == ETH_STATE_PASSIVE) {
+        printf("ETH_STATE_PASSIVE\n");
+    } else if (state == ETH_STATE_ACTIVE) {
+        printf("ETH_STATE_ACTIVE\n");
+    } else {
+        printf("Unknown state\n");
+    }
+}
+
 int eth_initialize(void)
 {
 	int num_devices = 0;
@@ -289,6 +301,7 @@ int eth_initialize(void)
 					"\n");
 
 			eth_write_hwaddr(dev, "eth", dev->index);
+			print_eth_state(dev->state);
 
 			dev = dev->next;
 			num_devices++;
