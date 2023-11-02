@@ -70,13 +70,17 @@ phy_interface_t fman_port_enet_if(enum fm_port port)
 
 	if (port == FM1_DTSEC3)
 		if ((rcwsr13 & FSL_CHASSIS2_RCWSR13_EC1) ==
-				FSL_CHASSIS2_RCWSR13_EC1_DTSEC3_RGMII)
+				FSL_CHASSIS2_RCWSR13_EC1_DTSEC3_RGMII){
+			// printf("FM1_DTSEC3 enet_if PHY_INTERFACE_MODE_RGMII_TXID\n");
 			return PHY_INTERFACE_MODE_RGMII_TXID;
+		}
 
 	if (port == FM1_DTSEC4)
 		if ((rcwsr13 & FSL_CHASSIS2_RCWSR13_EC2) ==
-				FSL_CHASSIS2_RCWSR13_EC2_DTSEC4_RGMII)
+				FSL_CHASSIS2_RCWSR13_EC2_DTSEC4_RGMII){
+			// printf("FM1_DTSEC4 enet_if PHY_INTERFACE_MODE_RGMII_TXID\n");
 			return PHY_INTERFACE_MODE_RGMII_TXID;
+		}
 
 	/* handle SGMII, only MAC 2/5/6/9/10 available */
 	switch (port) {
@@ -85,8 +89,10 @@ phy_interface_t fman_port_enet_if(enum fm_port port)
 	case FM1_DTSEC6:
 	case FM1_DTSEC9:
 	case FM1_DTSEC10:
-		if (is_serdes_configured(SGMII_FM1_DTSEC2 + port - FM1_DTSEC2))
+		if (is_serdes_configured(SGMII_FM1_DTSEC2 + port - FM1_DTSEC2)){
+			// printf("FM1_DTSEC2/5/6/9/10 enet_if PHY_INTERFACE_MODE_SGMII\n");
 			return PHY_INTERFACE_MODE_SGMII;
+		}
 		break;
 	default:
 		break;
@@ -98,8 +104,10 @@ phy_interface_t fman_port_enet_if(enum fm_port port)
 	case FM1_DTSEC9:
 	case FM1_DTSEC10:
 		if (is_serdes_configured(SGMII_2500_FM1_DTSEC5 +
-					 port - FM1_DTSEC5))
+					 port - FM1_DTSEC5)){
+			// printf("FM1_DTSEC5/9/10 enet_if PHY_INTERFACE_MODE_SGMII_2500\n");
 			return PHY_INTERFACE_MODE_SGMII_2500;
+		}
 		break;
 	default:
 		break;
@@ -111,8 +119,10 @@ phy_interface_t fman_port_enet_if(enum fm_port port)
 	case FM1_DTSEC5:
 	case FM1_DTSEC6:
 	case FM1_DTSEC10:
-		if (is_serdes_configured(QSGMII_FM1_A))
+		if (is_serdes_configured(QSGMII_FM1_A)){
+			// printf("FM1_DTSEC1/5/6/10 enet_if PHY_INTERFACE_MODE_QSGMII\n");
 			return PHY_INTERFACE_MODE_QSGMII;
+		}
 		break;
 	default:
 		break;
