@@ -48,7 +48,7 @@ int board_eth_init(bd_t *bis)
 
 	switch (srds_s1) {
 	case 0x3333:
-		printf("****switch 0x3333****");
+		printf("****switch 0x3333****\n");
 			/* Set the three on-board SGMII PHY address */
 			/* SGMII on slot 1, MAC 9/5/6, PHY address 3/4/5*/
 			fm_info_set_phy_address(FM1_DTSEC9, SGMII_PHY1_ADDR);
@@ -63,9 +63,9 @@ int board_eth_init(bd_t *bis)
 			dev = miiphy_get_dev_by_name(DEFAULT_FM_MDIO_NAME);
 			fm_info_set_mdio(FM1_DTSEC3, dev);
 			fm_info_set_mdio(FM1_DTSEC4, dev);
+			fm_info_set_mdio(FM1_DTSEC9, dev);
 			
 			dev = miiphy_get_dev_by_name(DEFAULT_FM_TGEC_MDIO_NAME);
-			fm_info_set_mdio(FM1_DTSEC9, dev);
 			fm_info_set_mdio(FM1_DTSEC5, dev);
 			fm_info_set_mdio(FM1_DTSEC6, dev);
 			

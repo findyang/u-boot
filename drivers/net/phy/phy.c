@@ -18,6 +18,7 @@
 #include <errno.h>
 #include <linux/err.h>
 #include <linux/compiler.h>
+#include <asm/io.h>
 
 DECLARE_GLOBAL_DATA_PTR;
 
@@ -178,7 +179,8 @@ int genphy_config_aneg(struct phy_device *phydev)
 	int result;
 
 	/* Gie SOFT RESET */
-    phy_reset(phydev);
+    // phy_reset(phydev);
+	// printf("genphy_config_aneg phy_reset\n");
 
 	if (phydev->autoneg != AUTONEG_ENABLE)
 		return genphy_setup_forced(phydev);
@@ -524,7 +526,6 @@ int phy_init(void)
 	phy_natsemi_init();
 #endif
 #ifdef CONFIG_PHY_REALTEK
-	printf("phy_realtek_init\n");
 	phy_realtek_init();
 #endif
 #ifdef CONFIG_PHY_SMSC
@@ -819,6 +820,20 @@ int phy_reset(struct phy_device *phydev)
 	int timeout = 1000;
 	int devad = MDIO_DEVAD_NONE;
 
+	// GPIO1_25 对应的值为001000000即是0x40
+	// unsigned int val;
+	// struct ccsr_gpio  *pgpio1 = (void *)(0x2300000);
+	// val = in_be32(&pgpio1->gpdir);
+	// val |= 0X40;
+	// out_be32(&pgpio1->gpdir, 0X40);
+	// printf("out_be32 pgpio1->gpdir = %u\n", pgpio1->gpdir);
+	
+	// val = in_be32(&pgpio1->gpdat);
+	// val &= ~0X40;
+	// out_be32(&pgpio1->gpdat, 0);
+	// mdelay(100);
+	// printf("out_be32 pgpio1->gpdat = %u\n", pgpio1->gpdat);
+
 	if (phydev->flags & PHY_FLAG_BROKEN_RESET)
 		return 0;
 
@@ -856,6 +871,19 @@ int phy_reset(struct phy_device *phydev)
 		}
 		udelay(1000);
 	}
+	
+	// GPIO1_25 对应的值为001000000即是0x40
+	// val = in_be32(&pgpio1->gpdir);
+	// val |= 0X40;
+	// out_be32(&pgpio1->gpdir, 0X40);
+	// printf("out_be32 pgpio1->gpdir = %u\n", pgpio1->gpdir);
+	
+	// val = in_be32(&pgpio1->gpdat);
+	// val |= 0X40;
+	// out_be32(&pgpio1->gpdat, 0X40);
+	// mdelay(100);
+	// printf("out_be32 pgpio1->gpdat = %u\n", pgpio1->gpdat);
+
 
 	if (reg & BMCR_RESET) {
 		puts("PHY reset timed out\n");
@@ -863,6 +891,7 @@ int phy_reset(struct phy_device *phydev)
 		return -1;
 	}
 
+	
 	return 0;
 }
 
@@ -903,13 +932,17 @@ void phy_connect_dev(struct phy_device *phydev, struct eth_device *dev)
 {
 	/* Soft Reset the PHY */
 	phy_reset(phydev);
+	printf("phy_connect_dev phy_reset\n");
 	if (phydev->dev && phydev->dev != dev) {
 		printf("%s:%d is connected to %s.  Reconnecting to %s\n",
 		       phydev->bus->name, phydev->addr,
 		       phydev->dev->name, dev->name);
 	}
+	printf("addr:%d is connected to %s.\n",
+		        phydev->addr,
+		       phydev->dev->name);
 	phydev->dev = dev;
-	debug("%s connected to %s\n", dev->name, phydev->drv->name);
+	printf("%s connected to %s\n", dev->name, phydev->drv->name);
 }
 
 #ifdef CONFIG_PHY_FIXED

@@ -343,14 +343,14 @@ int eth_init(void)
 
 	old_current = eth_current;
 	do {
-		debug("Trying %s\n", eth_current->name);
+		printf("Trying %s\n", eth_current->name);
 
 		if (eth_current->init(eth_current, gd->bd) >= 0) {
 			eth_current->state = ETH_STATE_ACTIVE;
-
+			puts("eth_current->state: ETH_STATE_ACTIVE\n");
 			return 0;
 		}
-		debug("FAIL\n");
+		puts("FAIL\n");
 
 		eth_try_another(0);
 	} while (old_current != eth_current);
