@@ -191,9 +191,9 @@ void config_board_mux(void)
 	u32 usb_pwrfault;
 	/*
 	 * USB2 is used, configure mux to USB2_DRVVBUS/USB2_PWRFAULT
-	 * USB3 is not used, configure mux to IIC4_SCL/IIC4_SDA
+	 * USB3 is used, configure mux to USB3_DRVVBUS/USB3_PWRFAULT
 	 */
-	out_be32(&scfg->rcwpmuxcr0, 0x3300);
+	out_be32(&scfg->rcwpmuxcr0, 0x3333);
 #ifdef CONFIG_HAS_FSL_IIC3
 	/* IIC3 is used, configure mux to use IIC3_SCL/IIC3/SDA */
 	out_be32(&scfg->rcwpmuxcr0, 0x0000);
